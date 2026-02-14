@@ -1,0 +1,1 @@
+We welcome PRs. Please read our Manifesto in the README. All PRs must pass the CI checks. If you add telemetry, your PR will be closed immediately.
