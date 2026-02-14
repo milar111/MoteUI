@@ -1,0 +1,31 @@
+name: "Gatekeeper"
+on: [pull_request]
+
+jobs:
+  test-and-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check Rust Formatting
+        run: cargo fmt -- --check --manifest-path src-tauri/Cargo.toml
+
+      - name: Check Rust Linting (Clippy)
+        run: cargo clippy --manifest-path src-tauri/Cargo.toml -- -D warnings
+
+      - name: Check Frontend (Svelte Check)
+        run: npm run check
